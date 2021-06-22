@@ -9,7 +9,22 @@
 import Foundation
 import UIKit
 
-class NextRegisterVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class NextRegisterVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPickerViewDataSource, UIPickerViewDelegate {
+    
+    private let picker = UIPickerView()
+    private let pickerdata = ["English","Hindi","Gujarati","Marathi","Tamil"]
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        1
+    }
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        pickerdata.count
+    }
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        pickerdata[row]
+    }
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        print(pickerdata[row])
+    }
     
     private let prof:UIImageView = {
         let img = UIImageView()
@@ -90,11 +105,6 @@ class NextRegisterVC: UIViewController, UIImagePickerControllerDelegate, UINavig
         labl.textColor = .init(red: 0.234, green: 0.289, blue: 0.294, alpha: 1)
         return labl
     }()
-    private let langpick:UIPickerView = {
-        let pick = UIPickerView()
-        
-        return pick
-    }()
     private let btn:UIButton = {
         let btnx = UIButton()
         btnx.setTitle("Done", for: .normal)
@@ -106,7 +116,7 @@ class NextRegisterVC: UIViewController, UIImagePickerControllerDelegate, UINavig
     @objc private func loginclicked() {
         showToast(message: "Register Successfully !", font: .systemFont(ofSize: 12.0))
         btn.isHidden = true
-        proc.frame = CGRect(x: 80, y: Int(view.height/4)+390, width: Int(view.width-160), height: 40)
+        proc.frame = CGRect(x: 80, y: Int(view.height/4)+470, width: Int(view.width-160), height: 40)
         proc.startAnimating()
         let seconds = 4.0
         DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
@@ -134,8 +144,12 @@ class NextRegisterVC: UIViewController, UIImagePickerControllerDelegate, UINavig
         view.addSubview(dob)
         view.addSubview(lblgen)
         view.addSubview(gen)
+        view.addSubview(lblpick)
+        view.addSubview(picker)
         view.addSubview(btn)
         view.addSubview(proc)
+        picker.dataSource = self
+        picker.delegate = self
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
@@ -172,6 +186,8 @@ class NextRegisterVC: UIViewController, UIImagePickerControllerDelegate, UINavig
         dob.frame = CGRect(x: 80, y: Int(view.height/4)+250, width: Int(view.width-160), height: 40)
         lblgen.frame = CGRect(x: 80, y: Int(view.height/4)+310, width: Int(view.width-160), height: 20)
         gen.frame = CGRect(x: 80, y: Int(view.height/4)+330, width: Int(view.width-160), height: 40)
-        btn.frame = CGRect(x: 80, y: Int(view.height/4)+390, width: Int(view.width-160), height: 40)
+        lblpick.frame = CGRect(x: 80, y: Int(view.height/4)+390, width: Int(view.width-160), height: 20)
+        picker.frame = CGRect(x: 80, y: Int(view.height/4)+410, width: Int(view.width-160), height: 40)
+        btn.frame = CGRect(x: 80, y: Int(view.height/4)+470, width: Int(view.width-160), height: 40)
     }
 }
